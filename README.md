@@ -56,9 +56,7 @@ Ahora que la base de datos está funcionando en Docker, puedes conectarte a ella
     *   **Hostname**: `127.0.0.1`
     *   **Port**: `3307` (¡Importante! Usamos el puerto `3307` como se especifica en el `docker-compose.yml` para no entrar en conflicto con posibles instalaciones locales de MySQL).
     *   **Username**: `root`
-    *   **Password**: Haz clic en "Store in Keychain..." e introduce la contraseña `password123`.
-
-    ![Configuración de MySQL Workbench](httpss://i.imgur.com/your-image-url.png)
+    *   **Password**: Introduce la contraseña `password123`.
 
 4.  Puedes hacer clic en **"Test Connection"** para verificar que los datos son correctos. Deberías ver un mensaje de éxito.
 5.  Haz clic en **"OK"** para guardar la conexión.
