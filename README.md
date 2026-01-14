@@ -2,26 +2,33 @@
 
 Este repositorio proporciona una configuración sencilla para levantar un entorno de base de datos MySQL utilizando Docker. A continuación se detallan los pasos para instalar las herramientas necesarias en Windows y cómo conectarse a la base de datos.
 
-## 1. Prerrequisitos de Software (Instalación en Windows)
+## Guía de Instalación para el Entorno Local
 
-Antes de empezar, necesitarás instalar las siguientes herramientas en tu sistema.
+### Docker Desktop en Windows (con WSL2)
 
-### a. Git
-Git es un sistema de control de versiones que te permitirá descargar (clonar) este repositorio en tu máquina.
-- **Descarga**: Ve a la página oficial de [Git for Windows](https://git-scm.com/download/win) y descarga el instalador.
-- **Instalación**: Ejecuta el instalador y sigue los pasos. La configuración por defecto es suficiente para la mayoría de los usuarios.
+Docker nos permite empaquetar la aplicación y sus dependencias en "contenedores". Esto garantiza que el entorno de desarrollo sea idéntico para todos los miembros del equipo, eliminando el clásico problema de "en mi máquina sí funciona".
 
-### b. Docker Desktop
-Docker nos permitirá ejecutar la base de datos en un contenedor aislado, sin necesidad de instalar MySQL directamente en tu sistema.
-- **Descarga**: Ve a la página oficial de [Docker Desktop](https://www.docker.com/products/docker-desktop/) y descarga el instalador para Windows.
-- **Instalación**: Ejecuta el instalador. Docker Desktop requiere que la característica de WSL 2 (Windows Subsystem for Linux) esté activada en Windows. El propio instalador de Docker te guiará en el proceso si no lo tienes activado. Es posible que necesites reiniciar tu ordenador.
+Esta guía asume que ya tienes WSL2 (Subsistema de Windows para Linux) instalado y configurado en tu máquina.
 
-### c. MySQL Workbench
-MySQL Workbench es una herramienta visual que te permitirá conectarte a la base de datos, explorar su estructura y ejecutar consultas SQL.
-- **Descarga**: Ve a la página de descargas de [MySQL Workbench Community](httpss://dev.mysql.com/downloads/workbench/) y selecciona la versión para Microsoft Windows.
-- **Instalación**: Ejecuta el instalador y sigue los pasos de la instalación.
+1.  **Desinstalar Versiones Anteriores:**
+    *   Ve a "Agregar o quitar programas" en la configuración de Windows.
+    *   Busca "Docker Desktop" en la lista de aplicaciones y selecciónalo.
+    *   Haz clic en "Desinstalar". **Necesitarás proporcionar una contraseña de administrador** para confirmar la acción.
 
-## 2. Configuración del Proyecto
+2.  **Instalar Docker Desktop:**
+    *   Descarga el instalador oficial desde la página de Docker: [https://www.docker.com/products/docker-desktop/](https://www.docker.com/products/docker-desktop/)
+    *   Ejecuta el archivo descargado. La instalación también **requerirá permisos de administrador**.
+    *   Sigue las instrucciones del asistente de instalación, asegurándote de que la opción para usar WSL2 esté seleccionada.
+
+### Instalación de Git y Clonación del Proyecto
+
+Git es un sistema de control de versiones que nos permite guardar un historial de los cambios en nuestro código. Es una herramienta esencial para colaborar en equipo, gestionar diferentes versiones del proyecto y poder volver a un estado anterior si algo sale mal.
+
+1.  **Instalar Git:**
+    *   Descarga Git para Windows desde el sitio web oficial: [https://git-scm.com/downloads](https://git-scm.com/downloads)
+    *   Ejecuta el instalador. Generalmente, puedes aceptar las opciones por defecto durante la instalación.
+
+## 1. Configuración del Proyecto
 
 Una vez instaladas las herramientas, sigue estos pasos:
 
@@ -44,7 +51,7 @@ docker-compose up -d
 ```
 Este comando leerá el archivo `docker-compose.yml`, descargará la imagen de MySQL (si no la tienes) y creará e iniciará el contenedor en segundo plano (`-d`).
 
-## 3. Conexión con MySQL Workbench
+## 2. Conexión con MySQL Workbench
 
 Ahora que la base de datos está funcionando en Docker, puedes conectarte a ella usando MySQL Workbench.
 
