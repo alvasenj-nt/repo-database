@@ -1,39 +1,71 @@
 # Repositorio de Base de Datos para Alumnos
 
-Este repositorio proporciona una configuración sencilla para levantar un entorno de base de datos MySQL utilizando Docker. A continuación se detallan los pasos para instalar las herramientas necesarias en Windows y cómo conectarse a la base de datos.
+Este repositorio proporciona una configuración sencilla para levantar un entorno de base de datos MySQL utilizando Docker. A continuación se detallan los pasos para instalar las herramientas necesarias y cómo conectarse a la base de datos.
 
-## Guía de Instalación para el Entorno Local
+## 1. Guía de Instalación de Prerrequisitos
 
-### Docker Desktop en Windows (con WSL2)
+Antes de empezar, necesitarás instalar Git y Docker en tu sistema.
 
-Docker nos permite empaquetar la aplicación y sus dependencias en "contenedores". Esto garantiza que el entorno de desarrollo sea idéntico para todos los miembros del equipo, eliminando el clásico problema de "en mi máquina sí funciona".
+### a. Windows
 
-Esta guía asume que ya tienes WSL2 (Subsistema de Windows para Linux) instalado y configurado en tu máquina.
+#### Git
+Git es un sistema de control de versiones que te permitirá descargar (clonar) este repositorio en tu máquina.
+- **Descarga**: Ve a la página oficial de [Git for Windows](https://git-scm.com/download/win) y descarga el instalador.
+- **Instalación**: Ejecuta el instalador y sigue los pasos. La configuración por defecto es suficiente para la mayoría de los usuarios.
 
-1.  **Desinstalar Versiones Anteriores:**
-    *   Ve a "Agregar o quitar programas" en la configuración de Windows.
-    *   Busca "Docker Desktop" en la lista de aplicaciones y selecciónalo.
-    *   Haz clic en "Desinstalar". **Necesitarás proporcionar una contraseña de administrador** para confirmar la acción.
+#### Docker Desktop
+Docker nos permitirá ejecutar la base de datos en un contenedor aislado, sin necesidad de instalar MySQL directamente en tu sistema.
+- **Descarga**: Ve a la página oficial de [Docker Desktop](https://www.docker.com/products/docker-desktop/) y descarga el instalador para Windows.
+- **Instalación**: Ejecuta el instalador. Docker Desktop requiere que la característica de WSL 2 (Windows Subsystem for Linux) esté activada en Windows. El propio instalador de Docker te guiará en el proceso si no lo tienes activado. Es posible que necesites reiniciar tu ordenador.
 
-2.  **Instalar Docker Desktop:**
-    *   Descarga el instalador oficial desde la página de Docker: [https://www.docker.com/products/docker-desktop/](https://www.docker.com/products/docker-desktop/)
-    *   Ejecuta el archivo descargado. La instalación también **requerirá permisos de administrador**.
-    *   Sigue las instrucciones del asistente de instalación, asegurándote de que la opción para usar WSL2 esté seleccionada.
+### b. macOS
 
-### Instalación de Git y Clonación del Proyecto
+#### Git
+Es muy probable que ya tengas Git instalado. Puedes verificarlo abriendo la **Terminal** y escribiendo `git --version`. Si no lo está, la forma más sencilla de instalarlo es a través de Homebrew.
+- **Instalar Homebrew** (si no lo tienes): Abre la Terminal y ejecuta el siguiente comando:
+  ```bash
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  ```
+- **Instalar Git**: Una vez instalado Homebrew, ejecuta:
+  ```bash
+  brew install git
+  ```
 
-Git es un sistema de control de versiones que nos permite guardar un historial de los cambios en nuestro código. Es una herramienta esencial para colaborar en equipo, gestionar diferentes versiones del proyecto y poder volver a un estado anterior si algo sale mal.
+#### Docker Desktop
+- **Descarga**: Ve a la página oficial de [Docker Desktop](https://www.docker.com/products/docker-desktop/). El sitio detectará que estás en macOS y te ofrecerá el archivo correcto.
+- **Instalación**: Abre el archivo `.dmg` que has descargado y arrastra el icono de Docker a tu carpeta de Aplicaciones.
 
-1.  **Instalar Git:**
-    *   Descarga Git para Windows desde el sitio web oficial: [https://git-scm.com/downloads](https://git-scm.com/downloads)
-    *   Ejecuta el instalador. Generalmente, puedes aceptar las opciones por defecto durante la instalación.
+### c. Ubuntu / Derivados de Debian
 
-## 1. Configuración del Proyecto
+#### Git
+La mayoría de las distribuciones de Linux vienen con Git. Si no es tu caso, puedes instalarlo fácilmente.
+- **Instalación**: Abre una terminal y ejecuta los siguientes comandos para actualizar la lista de paquetes e instalar Git:
+  ```bash
+  sudo apt update
+  sudo apt install git
+  ```
+
+#### Docker Desktop
+- **Descarga**: Descarga el paquete `.deb` para Ubuntu desde la página oficial de [Docker Desktop](https://www.docker.com/products/docker-desktop/).
+- **Instalación**: Navega con la terminal a la carpeta donde descargaste el archivo y ejecuta el siguiente comando. Reemplaza `<version>` y `<arch>` con el nombre del archivo descargado.
+  ```bash
+  sudo apt update
+  sudo apt install ./docker-desktop-<version>-<arch>.deb
+  ```
+- Al finalizar, es posible que necesites añadir tu usuario al grupo de Docker para poder ejecutar comandos sin `sudo`:
+  ```bash
+  sudo usermod -aG docker $USER
+  ```
+  Deberás cerrar sesión y volver a iniciarla para que este cambio surta efecto.
+
+---
+
+## 2. Configuración del Proyecto
 
 Una vez instaladas las herramientas, sigue estos pasos:
 
 ### a. Clonar el Repositorio
-Abre una terminal (puedes buscar "Git Bash" que se instaló con Git, o usar "PowerShell" o "Símbolo del sistema") y ejecuta el siguiente comando para descargar el código del repositorio:
+Abre una terminal (Git Bash en Windows, Terminal en macOS/Linux) y ejecuta el siguiente comando para descargar el código:
 ```bash
 git clone <URL_DEL_REPOSITORIO>
 ```
@@ -51,9 +83,11 @@ docker-compose up -d
 ```
 Este comando leerá el archivo `docker-compose.yml`, descargará la imagen de MySQL (si no la tienes) y creará e iniciará el contenedor en segundo plano (`-d`).
 
-## 2. Conexión con MySQL Workbench
+---
 
-Ahora que la base de datos está funcionando en Docker, puedes conectarte a ella usando MySQL Workbench.
+## 3. Conexión con MySQL Workbench
+
+Ahora que la base de datos está funcionando en Docker, puedes conectarte a ella usando cualquier cliente de MySQL. Las siguientes instrucciones son para MySQL Workbench.
 
 1.  Abre MySQL Workbench.
 2.  En la pantalla de bienvenida, haz clic en el icono `+` al lado de "MySQL Connections" para crear una nueva conexión.
@@ -61,18 +95,18 @@ Ahora que la base de datos está funcionando en Docker, puedes conectarte a ella
     *   **Connection Name**: Dale un nombre descriptivo (ej. `MySQL Docker Alumnos`).
     *   **Connection Method**: Deja el valor por defecto `Standard (TCP/IP)`.
     *   **Hostname**: `127.0.0.1`
-    *   **Port**: `3307` (¡Importante! Usamos el puerto `3307` como se especifica en el `docker-compose.yml` para no entrar en conflicto con posibles instalaciones locales de MySQL).
+    *   **Port**: `3307` (¡Importante! Usamos el puerto `3307` como se especifica en `docker-compose.yml`).
     *   **Username**: `root`
-    *   **Password**: Introduce la contraseña `password123`.
+    *   **Password**: Haz clic en "Store in Keychain..." e introduce la contraseña `password123`.
 
 4.  Puedes hacer clic en **"Test Connection"** para verificar que los datos son correctos. Deberías ver un mensaje de éxito.
 5.  Haz clic en **"OK"** para guardar la conexión.
 
-¡Listo! Ahora verás tu nueva conexión en la pantalla de bienvenida. Haz doble clic en ella para abrir el editor de SQL y empezar a trabajar con la base de datos `nba` que ha sido creada por el script de inicialización.
+¡Listo! Ahora verás tu nueva conexión en la pantalla de bienvenida. Haz doble clic en ella para abrir el editor de SQL y empezar a trabajar con la base de datos `nba`.
 
 ### Usuario Alternativo
 
-El script de inicialización también crea un usuario con menos privilegios llamado `alumno`. Si deseas conectarte con este usuario, puedes crear otra conexión en MySQL Workbench con los siguientes datos:
+El script de inicialización también crea un usuario con menos privilegios. Puedes conectarte con él usando los siguientes datos:
 *   **Username**: `alumno`
 *   **Password**: `alumno_pass`
 *   El resto de los datos (Hostname, Port) son los mismos.
