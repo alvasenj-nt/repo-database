@@ -67,9 +67,9 @@ Una vez instaladas las herramientas, sigue estos pasos:
 ### a. Clonar el Repositorio
 Abre una terminal (Git Bash en Windows, Terminal en macOS/Linux) y ejecuta el siguiente comando para descargar el código:
 ```bash
-git clone <URL_DEL_REPOSITORIO>
+git clone https://github.com/alvasenj-nt/repo-database.git
 ```
-*Nota: Reemplaza `<URL_DEL_REPOSITORIO>` con la URL real de este repositorio.*
+*Si no tienes Git, el botón **Code > Download ZIP** de esta página descarga lo mismo; descomprímelo y abre una terminal dentro de la carpeta.*
 
 Luego, navega a la carpeta que se acaba de crear:
 ```bash
@@ -79,9 +79,33 @@ cd repo-database
 ### b. Iniciar el Contenedor de la Base de Datos
 Asegúrate de que Docker Desktop esté en ejecución. Luego, en la misma terminal, dentro de la carpeta del proyecto, ejecuta el siguiente comando:
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
-Este comando leerá el archivo `docker-compose.yml`, descargará la imagen de MySQL (si no la tienes) y creará e iniciará el contenedor en segundo plano (`-d`).
+Este comando leerá el archivo `docker-compose.yml`, descargará la imagen de MySQL (si no la tienes) y creará e iniciará el contenedor `mysql_alumnos` en segundo plano (`-d`).
+
+La primera vez tarda uno o dos minutos: el script `init_db.sql` carga las bases de datos de ejemplo (nba, jardineria, sakila, empresa, concesionario, caltech, instituto y NorthWind). Puedes seguir el proceso con:
+```bash
+docker compose logs -f db
+```
+(`Ctrl+C` para salir). Para comprobar que el contenedor está en marcha:
+```bash
+docker ps
+```
+
+### c. Gestión del contenedor
+Ejecuta estas órdenes dentro de la carpeta del proyecto:
+
+| Orden | Efecto | ¿Conserva tus datos? |
+|---|---|---|
+| `docker compose stop` / `docker compose start` | Para y vuelve a arrancar el servidor | Sí |
+| `docker compose down` | Elimina el contenedor; el volumen con los datos sigue. `docker compose up -d` lo recrea | Sí |
+| `docker compose down -v` | Elimina también el volumen. El siguiente `docker compose up -d` parte de cero y vuelve a ejecutar `init_db.sql` | **No** |
+| `git pull` | Descarga los cambios del repositorio. Un `init_db.sql` nuevo solo se aplica tras `docker compose down -v` | Sí |
+
+- `init_db.sql` solo se ejecuta cuando el volumen está vacío, es decir, la primera vez o después de `docker compose down -v`.
+- `docker compose down -v` es el botón de reinicio: útil si has estropeado las bases de datos de ejemplo, pero borra todo lo que hayas creado. Guarda siempre tus scripts `.sql` en tu equipo, fuera del contenedor.
+- El contenedor tiene `restart: always`: arranca solo cada vez que se abre Docker Desktop.
+- Si `docker compose up -d` falla con *port is already allocated*, otro programa está usando el puerto `3307`.
 
 ---
 
@@ -97,7 +121,7 @@ Ahora que la base de datos está funcionando en Docker, puedes conectarte a ella
     *   **Hostname**: `127.0.0.1`
     *   **Port**: `3307` (¡Importante! Usamos el puerto `3307` como se especifica en `docker-compose.yml`).
     *   **Username**: `root`
-    *   **Password**: Haz clic en "Store in Keychain..." e introduce la contraseña `password123`.
+    *   **Password**: Haz clic en "Store in Vault..." (Windows) o "Store in Keychain..." (macOS) e introduce la contraseña `password123`.
 
 4.  Puedes hacer clic en **"Test Connection"** para verificar que los datos son correctos. Deberías ver un mensaje de éxito.
 5.  Haz clic en **"OK"** para guardar la conexión.
@@ -110,3 +134,18 @@ El script de inicialización también crea un usuario con menos privilegios. Pue
 *   **Username**: `alumno`
 *   **Password**: `alumno_pass`
 *   El resto de los datos (Hostname, Port) son los mismos.
+
+El usuario `alumno` puede crear bases de datos, tablas, vistas, usuarios y roles, pero no tiene `GRANT OPTION`: para conceder privilegios con `GRANT` hay que conectarse como `root`.
+
+### Sin Workbench: cliente de terminal
+
+```bash
+docker exec -it mysql_alumnos mysql -u root -p
+```
+
+Para ejecutar un script desde Git Bash (en Windows) o desde la terminal (en macOS y Linux):
+```bash
+docker exec -i mysql_alumnos mysql -uroot -ppassword123 < mi_script.sql
+```
+
+Si Workbench muestra *Can't connect to MySQL server on '127.0.0.1:3307'*, el contenedor está parado o Docker Desktop no está abierto: compruébalo con `docker ps`.
